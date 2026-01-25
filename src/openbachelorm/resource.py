@@ -1,0 +1,405 @@
+import json
+from pathlib import Path
+import zipfile
+from zipfile import ZipFile
+
+import UnityPy
+from packaging.version import Version
+
+from .helper import (
+    download_hot_update_list,
+    download_asset,
+    escape_ab_name,
+    write_mod,
+    get_manifest,
+    dump_table,
+    get_manifest_bytes,
+    apply_decorator_lst,
+)
+from .const import TMP_DIRPATH, ASSET_DIRPATH, MOD_DIRPATH
+
+
+def get_anon_asset_name_set(asset_env: UnityPy.Environment):
+    anon_asset_name_set: set[str] = set()
+
+    for obj in asset_env.objects:
+        if obj.type.name == "TextAsset":
+            data = obj.read()
+
+            anon_asset_name_set.add(data.m_Name)
+
+    return anon_asset_name_set
+
+
+def get_table_data_by_prefix(asset_env: UnityPy.Environment, table_prefix: str):
+    for obj in asset_env.objects:
+        if obj.type.name == "TextAsset":
+            data = obj.read()
+
+            if data.m_Name.startswith(table_prefix):
+                return data
+
+    return None
+
+
+def get_level_data_by_level_id(asset_env: UnityPy.Environment, level_id: str):
+    for obj in asset_env.objects:
+        if obj.type.name == "TextAsset":
+            data = obj.read()
+
+            if data.m_Name == level_id:
+                return data
+
+    return None
+
+
+def get_mod_filepath(mod_dirpath: Path, ab_name: str):
+    return (mod_dirpath / escape_ab_name(ab_name)).with_suffix(".dat")
+
+
+def get_torappu_index_tree(torappu_index_ab: UnityPy.Environment, res_version: str):
+    for obj in torappu_index_ab.objects:
+        if obj.type.name != "MonoBehaviour":
+            continue
+
+        tree = obj.read_typetree()
+
+        dump_table(tree, f"torappu_index_tree_{res_version}_pre.json")
+
+        return tree
+
+    return None
+
+
+def get_torappu_tree(torappu_ab: UnityPy.Environment, res_version: str):
+    for obj in torappu_ab.objects:
+        if obj.type.name != "AssetBundleManifest":
+            continue
+
+        tree = obj.read_typetree()
+
+        dump_table(tree, f"torappu_tree_{res_version}_pre.json")
+
+        return tree
+
+    return None
+
+
+def get_ab_dep_map(torappu_tree):
+    ab_dep_map = {}
+
+    ab_id_dict = {}
+
+    for ab_id, ab_name in torappu_tree["AssetBundleNames"]:
+        ab_id_dict[ab_id] = ab_name
+
+    for ab_id, ab_info in torappu_tree["AssetBundleInfos"]:
+        ab_name = ab_id_dict[ab_id]
+
+        ab_dep_map[ab_name] = [
+            ab_id_dict[i] for i in ab_info["AssetBundleDependencies"]
+        ]
+
+    return ab_dep_map
+
+
+def build_legacy_pseudo_manifest(torappu_index_tree, torappu_tree):
+    pseudo_manifest = {
+        "bundles": [],
+        "assetToBundleList": [],
+    }
+
+    ab_dep_map = get_ab_dep_map(torappu_tree)
+
+    for bundle_info in torappu_index_tree["bundles"]:
+        pseudo_manifest["bundles"].append(
+            {
+                "name": bundle_info["name"],
+                "isCacheable": bool(bundle_info["isCacheable"]),
+                "sccIndex": bundle_info["sccIndex"],
+            },
+        )
+
+    ab_name_dict = {}
+
+    for i, bundle_obj in enumerate(pseudo_manifest["bundles"]):
+        bundle_name = bundle_obj["name"]
+
+        ab_name_dict[bundle_name] = i
+
+    for bundle_obj in pseudo_manifest["bundles"]:
+        bundle_name = bundle_obj["name"]
+
+        bundle_obj["allDependencies"] = [
+            ab_name_dict[i] for i in ab_dep_map.get(bundle_name, [])
+        ]
+
+    for asset_info in torappu_index_tree["assetToBundleList"]:
+        bundle_name = asset_info["bundleName"]
+
+        pseudo_manifest["assetToBundleList"].append(
+            {
+                "assetName": asset_info["assetName"],
+                "bundleIndex": ab_name_dict[bundle_name],
+                "name": asset_info.get("name", ""),
+                "path": asset_info.get("path", ""),
+            }
+        )
+
+    return pseudo_manifest
+
+
+class Resource:
+    def __init__(self, client_version: str, res_version: str):
+        self.client_version = client_version
+        self.res_version = res_version
+
+        self.asset_dict: dict[str, UnityPy.Environment] = {}
+        self.modified_asset_set: set[str] = set()
+
+        self.anon_ab_name_set: set[str] = None
+        self.anon_asset_name_dict: dict[str, set[str]] = {}
+
+        self.manifest_loaded = False
+        self.manifest_modified = False
+
+        self.foreign_asset_dict: dict[str, Path] = {}
+
+        self.load_hot_update_list()
+
+    def load_hot_update_list(self):
+        hot_update_list_filepath = download_hot_update_list(self.res_version)
+
+        with open(hot_update_list_filepath, encoding="utf-8") as f:
+            hot_update_list = json.load(f)
+
+        self.hot_update_list = hot_update_list
+
+    def load_manifest(self):
+        if self.manifest_loaded:
+            return
+
+        self.manifest_ab_name = self.hot_update_list["manifestName"]
+
+        self.manifest = get_manifest(
+            download_asset(self.res_version, self.manifest_ab_name).read_bytes(),
+            self.client_version,
+        )
+
+        self.manifest_loaded = True
+
+        dump_table(self.manifest, f"manifest_{self.res_version}_pre.json")
+
+    def load_legacy_pseudo_manifest(self):
+        if self.manifest_loaded:
+            return
+
+        torappu_index_ab = self.load_asset("torappu_index.ab")
+        torappu_index_tree = get_torappu_index_tree(torappu_index_ab, self.res_version)
+
+        torappu_ab = self.load_asset("torappu.ab")
+        torappu_tree = get_torappu_tree(torappu_ab, self.res_version)
+
+        self.manifest = build_legacy_pseudo_manifest(torappu_index_tree, torappu_tree)
+
+        self.manifest_loaded = True
+
+        dump_table(self.manifest, f"pseudo_manifest_{self.res_version}_pre.json")
+
+    def get_ab_name_from_manifest(self, asset_obj):
+        return self.manifest["bundles"][asset_obj["bundleIndex"]]["name"]
+
+    def query_manifest(self, asset_name: str):
+        self.load_manifest()
+
+        for asset_obj in self.manifest["assetToBundleList"]:
+            if asset_obj["assetName"] == asset_name:
+                return self.get_ab_name_from_manifest(asset_obj)
+
+        raise KeyError(f"{asset_name} not found")
+
+    def query_manifest_by_prefix(self, asset_name_prefix: str):
+        self.load_manifest()
+
+        for asset_obj in self.manifest["assetToBundleList"]:
+            if asset_obj["assetName"].startswith(asset_name_prefix):
+                return self.get_ab_name_from_manifest(asset_obj)
+
+        raise KeyError(f"{asset_name_prefix} not found")
+
+    def load_asset(self, ab_name: str):
+        if ab_name in self.asset_dict:
+            return self.asset_dict[ab_name]
+
+        asset_filepath = download_asset(self.res_version, ab_name)
+
+        asset_env = UnityPy.load(asset_filepath.as_posix())
+
+        self.asset_dict[ab_name] = asset_env
+
+        return asset_env
+
+    def register_anon_asset_name(self, ab_name: str, asset_env: UnityPy.Environment):
+        anon_asset_name_set = get_anon_asset_name_set(asset_env)
+
+        for anon_asset_name in anon_asset_name_set:
+            if anon_asset_name not in self.anon_asset_name_dict:
+                self.anon_asset_name_dict[anon_asset_name] = set()
+
+            self.anon_asset_name_dict[anon_asset_name].add(ab_name)
+
+    ANCHOR_LEVEL_ID_SET = {
+        "level_main_01-07",
+        "level_camp_03",
+        "level_act3d0_01",
+    }
+
+    def build_level_ab_name_set(self):
+        self.level_ab_name_set: set[str] = set()
+
+        for anchor_level_id in self.ANCHOR_LEVEL_ID_SET:
+            ab_name_set = self.anon_asset_name_dict.get(anchor_level_id, set())
+            if len(ab_name_set) != 1:
+                raise FileNotFoundError(f"anchor_level_id {anchor_level_id} not found")
+
+            self.level_ab_name_set.add(next(iter(ab_name_set)))
+
+    def load_anon_asset(self) -> set[str]:
+        if self.anon_ab_name_set is not None:
+            return
+
+        self.anon_ab_name_set = set()
+
+        for ab_info in self.hot_update_list["abInfos"]:
+            ab_name = ab_info["name"]
+
+            if not ab_name.startswith("anon/"):
+                continue
+
+            asset_env = self.load_asset(ab_name)
+            self.anon_ab_name_set.add(ab_name)
+
+            self.register_anon_asset_name(ab_name, asset_env)
+
+        self.build_level_ab_name_set()
+
+    def mark_modified_asset(self, ab_name: str):
+        if ab_name not in self.asset_dict:
+            raise KeyError(f"{ab_name} not loaded")
+
+        self.modified_asset_set.add(ab_name)
+
+    def build_mod(self, mod_name: str):
+        mod_dirpath = Path(MOD_DIRPATH, mod_name)
+
+        mod_dirpath.mkdir(parents=True, exist_ok=True)
+
+        for ab_name in self.modified_asset_set:
+            mod_filepath = get_mod_filepath(mod_dirpath, ab_name)
+            asset_env = self.asset_dict[ab_name]
+            write_mod(mod_filepath, ab_name, asset_env.file.save())
+
+        if self.manifest_modified:
+            dump_table(self.new_manifest, f"manifest_{self.res_version}_post.json")
+
+            manifest_bytes = get_manifest_bytes(self.new_manifest, self.client_version)
+            write_mod(
+                get_mod_filepath(mod_dirpath, self.manifest_ab_name),
+                self.manifest_ab_name,
+                manifest_bytes,
+            )
+
+        for ab_name, ab_path in self.foreign_asset_dict.items():
+            write_mod(
+                get_mod_filepath(mod_dirpath, ab_name),
+                ab_name,
+                ab_path.read_bytes(),
+            )
+
+    def get_table_ab_name(self, table_prefix: str):
+        self.load_anon_asset()
+
+        for anon_asset_name in self.anon_asset_name_dict:
+            if anon_asset_name.startswith(table_prefix):
+                return next(iter(self.anon_asset_name_dict[anon_asset_name]))
+
+        raise FileNotFoundError(f"{table_prefix} not found")
+
+    def mod_table(
+        self,
+        table_prefix: str,
+        mod_table_func,
+        decorator_lst,
+        table_asset_name_prefix: str = "",
+        no_manifest=False,
+    ):
+        if no_manifest:
+            table_ab_name = self.get_table_ab_name(table_prefix)
+
+        else:
+            if not table_asset_name_prefix:
+                raise ValueError("table_asset_name_prefix must be provided")
+
+            table_ab_name = self.query_manifest_by_prefix(table_asset_name_prefix)
+
+        table_asset_env = self.load_asset(table_ab_name)
+
+        self.mark_modified_asset(table_ab_name)
+
+        data = get_table_data_by_prefix(table_asset_env, table_prefix)
+
+        mod_table_func = apply_decorator_lst(mod_table_func, decorator_lst)
+
+        data.m_Script = mod_table_func(data.m_Script)
+
+        data.save()
+
+    def get_level_ab_name(self, level_id: str):
+        self.load_anon_asset()
+
+        if level_id not in self.anon_asset_name_dict:
+            raise KeyError(f"{level_id} not found")
+
+        for ab_name in self.anon_asset_name_dict[level_id]:
+            if ab_name in self.level_ab_name_set:
+                return ab_name
+
+        raise KeyError(f"{level_id} is not a level")
+
+    def mod_level(
+        self,
+        level_id: str,
+        mod_level_func,
+        decorator_lst,
+        level_asset_name: str = "",
+        no_manifest=False,
+    ):
+        if no_manifest:
+            level_ab_name = self.get_level_ab_name(level_id)
+        else:
+            if not level_asset_name:
+                raise ValueError("level_asset_name must be provided")
+
+            level_ab_name = self.query_manifest(level_asset_name)
+
+        asset_env = self.load_asset(level_ab_name)
+
+        self.mark_modified_asset(level_ab_name)
+
+        level_data = get_level_data_by_level_id(asset_env, level_id)
+
+        mod_level_func = apply_decorator_lst(mod_level_func, decorator_lst)
+
+        level_data.m_Script = mod_level_func(level_data.m_Script)
+
+        level_data.save()
+
+    def mark_manifest(self, new_manifest):
+        if not self.manifest_loaded:
+            raise KeyError("manifest not loaded")
+
+        self.manifest_modified = True
+        self.new_manifest = new_manifest
+
+    def register_foreign_asset(self, ab_name: str, ab_path: Path):
+        self.foreign_asset_dict[ab_name] = ab_path

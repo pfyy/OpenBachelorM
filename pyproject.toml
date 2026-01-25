@@ -1,0 +1,28 @@
+[project]
+name = "openbachelorm"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Your Name", email = "you@example.com" }]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "unitypy @ git+https://github.com/MooncellWiki/UnityPy.git@master",
+    "python-dotenv (>=1.2.1,<2.0.0)",
+    "pycryptodome (>=3.23.0,<4.0.0)",
+    "pymongo (>=4.15.5,<5.0.0)",
+    "packaging (>=25.0,<26.0)",
+    "anytree (>=2.13.0,<3.0.0)",
+    "flatbuffers (>=25.12.19,<26.0.0)",
+]
+
+[tool.poetry]
+packages = [{ include = "openbachelorm", from = "src" }]
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.10"
+pytest = "^9.0.2"
+poethepoet = "0.37.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
