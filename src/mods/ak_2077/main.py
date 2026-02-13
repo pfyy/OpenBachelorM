@@ -84,7 +84,7 @@ def build_sample_mod(client_version: str, res_version: str):
 
 
 def main():
-    build_sample_mod("2.7.01", "26-02-06-13-37-25_e45854")
+    build_sample_mod("2.7.01", "26-02-12-13-45-20_d44b0c")
 
 
 if __name__ == "__main__":

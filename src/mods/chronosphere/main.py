@@ -5,7 +5,7 @@ from openbachelorm.manifest import ManifestMerger
 def main():
     mgr = ManifestMerger(
         "chronosphere",
-        Resource("2.7.01", "26-02-06-13-37-25_e45854"),
+        Resource("2.7.01", "26-02-12-13-45-20_d44b0c"),
         [
             Resource("2.6.91", "26-02-02-04-52-41_58bd30"),
             Resource("2.6.82", "25-12-30-07-42-27_86bc9a"),
