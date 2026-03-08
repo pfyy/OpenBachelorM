@@ -263,6 +263,9 @@ def merge_special_anon_bundle(
             if data.m_Name in dst_name_set:
                 continue
 
+            if data.m_Name.startswith("StageMixStoryRetro"):
+                continue
+
             while i in dst_serialized_file.objects:
                 i = get_random_int32()
 
