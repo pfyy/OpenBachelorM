@@ -7,10 +7,10 @@ readme = "README.md"
 requires-python = ">=3.12,<4.0"
 dependencies = [
     "unitypy @ git+https://github.com/MooncellWiki/UnityPy.git@master",
-    "python-dotenv (>=1.2.1,<2.0.0)",
+    "python-dotenv (>=1.2.2,<2.0.0)",
     "pycryptodome (>=3.23.0,<4.0.0)",
-    "pymongo (>=4.15.5,<5.0.0)",
-    "packaging (>=25.0,<26.0)",
+    "pymongo (>=4.17.0,<5.0.0)",
+    "packaging (>=26.2,<27.0)",
     "anytree (>=2.13.0,<3.0.0)",
     "flatbuffers (>=25.12.19,<26.0.0)",
 ]
@@ -19,9 +19,9 @@ dependencies = [
 packages = [{ include = "openbachelorm", from = "src" }]
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.14.10"
-pytest = "^9.0.2"
-poethepoet = "0.37.0"
+ruff = "^0.15.12"
+pytest = "^9.0.3"
+poethepoet = "^0.44.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
