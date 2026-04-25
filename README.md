@@ -10,9 +10,11 @@ Discord: [https://discord.gg/W4yPMpBv8F](https://discord.gg/W4yPMpBv8F)
 
 ### 1. Setup
 
-1. Install Python 3.12 and add `python.exe` to path.
+1. Install Visual Studio Community Edition with `Desktop development with C++`.
 
-2. Run `setup.cmd`.
+2. Install Python 3.12 and add `python.exe` to path.
+
+3. Run `setup.cmd`.
 
 ### 2. Build Mod
 
