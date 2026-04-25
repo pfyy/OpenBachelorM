@@ -39,4 +39,4 @@ def test_known_table():
     load_known_table("2.6.91", "26-02-02-04-52-41_58bd30")
     load_known_table("2.7.01", "26-02-28-10-42-20_2bc282")
     load_known_table("2.7.11", "26-03-31-05-42-28_7d7f67")
-    load_known_table("2.7.21", "26-04-14-11-12-01_cf554f")
+    load_known_table("2.7.21", "26-04-22-10-22-20_1d417a")
