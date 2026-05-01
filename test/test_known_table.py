@@ -40,3 +40,4 @@ def test_known_table():
     load_known_table("2.7.01", "26-02-28-10-42-20_2bc282")
     load_known_table("2.7.11", "26-03-31-05-42-28_7d7f67")
     load_known_table("2.7.21", "26-04-22-10-22-20_1d417a")
+    load_known_table("2.7.31", "26-04-28-16-18-19_ca4c26")
