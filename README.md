@@ -4,8 +4,6 @@ OpenBachelor Mod. For PvZ Online.
 
 This project is a mod builder. If you are looking for a game server/launcher, please look at OpenBachelor Server/Client.
 
-Discord: [https://discord.gg/W4yPMpBv8F](https://discord.gg/W4yPMpBv8F)
-
 ## How-To
 
 ### 1. Setup
