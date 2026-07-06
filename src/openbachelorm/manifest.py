@@ -44,8 +44,10 @@ class ManifestAsset:
     bundle: "ManifestBundle"
 
 
-def download_bundle(bundle: ManifestBundle) -> Path:
-    return download_asset(bundle.manifest.resource.res_version, bundle.name)
+def download_bundle(bundle: ManifestBundle, platform_name: str) -> Path:
+    return download_asset(
+        bundle.manifest.resource.res_version, bundle.name, platform_name
+    )
 
 
 def get_node_path(node: Node) -> str:
@@ -335,12 +337,17 @@ MERGER_TREE_ROOT_NAME = "openbachelorm"
 
 class ManifestMerger:
     def __init__(
-        self, mod_name: str, target_res: Resource, src_res_lst: list[Resource]
+        self,
+        mod_name: str,
+        target_res: Resource,
+        src_res_lst: list[Resource],
+        platform_name: str = "Android",
     ):
         self.mod_name = mod_name
 
         self.target_res = target_res
         self.src_res_lst = src_res_lst
+        self.platform_name = platform_name
 
         self.target_res_manager = ManifestManager(target_res)
         self.src_res_manager_lst = [ManifestManager(i) for i in src_res_lst]
@@ -475,7 +482,7 @@ class ManifestMerger:
 
     def prep_merger_bundle(self):
         for bundle_name, merger_bundle in self.merger_bundle_dict.items():
-            bundle_filepath = download_bundle(merger_bundle.bundle)
+            bundle_filepath = download_bundle(merger_bundle.bundle, self.platform_name)
 
             merger_bundle_filepath = self.get_merger_bundle_filepath(bundle_name)
 

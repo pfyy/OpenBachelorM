@@ -150,9 +150,12 @@ def build_legacy_pseudo_manifest(torappu_index_tree, torappu_tree):
 
 
 class Resource:
-    def __init__(self, client_version: str, res_version: str):
+    def __init__(
+        self, client_version: str, res_version: str, platform_name: str = "Android"
+    ):
         self.client_version = client_version
         self.res_version = res_version
+        self.platform_name = platform_name
 
         self.asset_dict: dict[str, UnityPy.Environment] = {}
         self.modified_asset_set: set[str] = set()
@@ -168,7 +171,9 @@ class Resource:
         self.load_hot_update_list()
 
     def load_hot_update_list(self):
-        hot_update_list_filepath = download_hot_update_list(self.res_version)
+        hot_update_list_filepath = download_hot_update_list(
+            self.res_version, self.platform_name
+        )
 
         with open(hot_update_list_filepath, encoding="utf-8") as f:
             hot_update_list = json.load(f)
@@ -182,7 +187,9 @@ class Resource:
         self.manifest_ab_name = self.hot_update_list["manifestName"]
 
         self.manifest = get_manifest(
-            download_asset(self.res_version, self.manifest_ab_name).read_bytes(),
+            download_asset(
+                self.res_version, self.manifest_ab_name, self.platform_name
+            ).read_bytes(),
             self.client_version,
         )
 
@@ -231,7 +238,7 @@ class Resource:
         if ab_name in self.asset_dict:
             return self.asset_dict[ab_name]
 
-        asset_filepath = download_asset(self.res_version, ab_name)
+        asset_filepath = download_asset(self.res_version, ab_name, self.platform_name)
 
         asset_env = UnityPy.load(asset_filepath.as_posix())
 

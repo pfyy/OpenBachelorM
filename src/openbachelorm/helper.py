@@ -15,7 +15,7 @@ from packaging.version import Version
 from .const import TMP_DIRPATH, ASSET_DIRPATH, KnownTable
 
 
-ORIG_ASSET_URL_PREFIX = "https://ak.hycdn.cn/assetbundle/official/Android/assets"
+ORIG_ASSET_URL_PREFIX = "https://ak.hycdn.cn/assetbundle/official"
 
 
 def remove_aria2_tmp(tmp_filepath: Path):
@@ -72,19 +72,21 @@ def escape_ab_name(ab_name: str) -> str:
     return ab_name.replace("/", "_").replace("#", "__")
 
 
-def get_asset_dat_url(res_version: str, asset_rel_filepath: Path):
+def get_asset_dat_url(res_version: str, asset_rel_filepath: Path, platform_name: str):
     asset_dat_rel_filepath = asset_rel_filepath.with_suffix(".dat")
 
     asset_dat_url_filename = escape_ab_name(asset_dat_rel_filepath.as_posix())
 
-    return f"{ORIG_ASSET_URL_PREFIX}/{res_version}/{asset_dat_url_filename}"
+    return f"{ORIG_ASSET_URL_PREFIX}/{platform_name}/assets/{res_version}/{asset_dat_url_filename}"
 
 
 def get_asset_filepath(res_version: str, asset_rel_filepath_str: str):
     return Path(ASSET_DIRPATH) / res_version / asset_rel_filepath_str
 
 
-def download_asset(res_version: str, asset_rel_filepath_str: str) -> Path:
+def download_asset(
+    res_version: str, asset_rel_filepath_str: str, platform_name: str
+) -> Path:
     asset_rel_filepath = Path(asset_rel_filepath_str)
 
     asset_filepath = get_asset_filepath(res_version, asset_rel_filepath_str)
@@ -94,7 +96,7 @@ def download_asset(res_version: str, asset_rel_filepath_str: str) -> Path:
 
     asset_filepath.parent.mkdir(parents=True, exist_ok=True)
 
-    asset_dat_url = get_asset_dat_url(res_version, asset_rel_filepath)
+    asset_dat_url = get_asset_dat_url(res_version, asset_rel_filepath, platform_name)
 
     asset_dat_filepath = asset_filepath.with_suffix(".dat")
 
@@ -111,15 +113,13 @@ def download_asset(res_version: str, asset_rel_filepath_str: str) -> Path:
 HOT_UPDATE_LIST_JSON = "hot_update_list.json"
 
 
-def download_hot_update_list(res_version: str) -> Path:
+def download_hot_update_list(res_version: str, platform_name: str) -> Path:
     hot_update_list_filepath = Path(ASSET_DIRPATH, res_version, HOT_UPDATE_LIST_JSON)
 
     if hot_update_list_filepath.is_file():
         return hot_update_list_filepath
 
-    hot_update_list_url = (
-        f"{ORIG_ASSET_URL_PREFIX}/{res_version}/{HOT_UPDATE_LIST_JSON}"
-    )
+    hot_update_list_url = f"{ORIG_ASSET_URL_PREFIX}/{platform_name}/assets/{res_version}/{HOT_UPDATE_LIST_JSON}"
 
     download_file(hot_update_list_url, hot_update_list_filepath)
 
