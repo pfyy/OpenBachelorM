@@ -44,9 +44,11 @@ class ManifestAsset:
     bundle: "ManifestBundle"
 
 
-def download_bundle(bundle: ManifestBundle, platform_name: str) -> Path:
+def download_bundle(bundle: ManifestBundle) -> Path:
     return download_asset(
-        bundle.manifest.resource.res_version, bundle.name, platform_name
+        bundle.manifest.resource.res_version,
+        bundle.name,
+        bundle.manifest.resource.platform_name,
     )
 
 
@@ -482,7 +484,7 @@ class ManifestMerger:
 
     def prep_merger_bundle(self):
         for bundle_name, merger_bundle in self.merger_bundle_dict.items():
-            bundle_filepath = download_bundle(merger_bundle.bundle, self.platform_name)
+            bundle_filepath = download_bundle(merger_bundle.bundle)
 
             merger_bundle_filepath = self.get_merger_bundle_filepath(bundle_name)
 
