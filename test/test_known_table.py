@@ -54,3 +54,4 @@ def test_known_table_windows():
     load_known_table("2.7.21", "26-04-22-09-33-12_01a3a2", "Windows")
     load_known_table("2.7.31", "26-05-20-14-05-50_24a03e", "Windows")
     load_known_table("2.7.41", "26-07-01-15-25-07_7886d5", "Windows")
+    load_known_table("2.7.51", "26-07-10-13-52-38_fcd8ed", "Windows")
