@@ -8,8 +8,10 @@ from openbachelorm.helper import (
 from openbachelorm.const import KnownTable
 
 
-def load_known_table(client_version: str, res_version: str):
-    res = Resource(client_version, res_version)
+def load_known_table(
+    client_version: str, res_version: str, platform_name: str = "Android"
+):
+    res = Resource(client_version, res_version, platform_name)
 
     for known_table in KnownTable:
         if not is_known_table_available(known_table, client_version):
@@ -42,3 +44,4 @@ def test_known_table():
     load_known_table("2.7.21", "26-04-22-10-22-20_1d417a")
     load_known_table("2.7.31", "26-05-20-12-59-09_e8f456")
     load_known_table("2.7.41", "26-07-01-15-26-52_d3376d")
+    load_known_table("2.7.51", "26-07-10-13-49-06_a14b4a")
