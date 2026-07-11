@@ -22,6 +22,11 @@ def main():
     mgr.copy_zonemap_node()
 
     mgr.copy_merger_tree_node(
+        "activity/[uc]act50side/prefabs/zonemaps/zone_map_act50side_zone1",
+        "ui/zonemaps/zone_map_act50side_zone1",
+    )
+
+    mgr.copy_merger_tree_node(
         "activity/[uc]act24sre/zonemap/zone_map_act24sre_zone1",
         "ui/zonemaps/zone_map_act24sre_zone1",
     )
