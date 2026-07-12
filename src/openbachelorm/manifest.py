@@ -304,6 +304,9 @@ def get_act_asset_map(res: Resource):
 def merge_act_asset_map(target_act_asset_map, src_act_asset_map_lst):
     target_act_asset_map_obj = json.loads(target_act_asset_map.m_Script)
 
+    for src_act_asset_map in src_act_asset_map_lst:
+        src_act_asset_map_obj = json.loads(src_act_asset_map.m_Script)
+
     target_act_asset_map.m_Script = json.dumps(target_act_asset_map_obj)
 
     target_act_asset_map.save()
@@ -515,8 +518,8 @@ class ManifestMerger:
 
         src_act_asset_map_lst = []
 
-        for src_res_manager in self.src_res_lst:
-            src_act_asset_map = get_act_asset_map(src_res_manager)
+        for src_res in self.src_res_lst:
+            src_act_asset_map = get_act_asset_map(src_res)
             src_act_asset_map_lst.append(src_act_asset_map)
 
         merge_act_asset_map(target_act_asset_map, src_act_asset_map_lst)
