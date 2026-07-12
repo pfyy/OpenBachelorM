@@ -285,7 +285,10 @@ ACT_ASSET_MAP_AB_NAME = "config/common.ab"
 
 
 def get_act_asset_map(res: Resource):
-    asset_env = res.load_asset(ACT_ASSET_MAP_AB_NAME)
+    if Version(res.client_version) <= Version("1.9.62"):
+        asset_env = res.load_asset("config/act_asset_map.ab")
+    else:
+        asset_env = res.load_asset(ACT_ASSET_MAP_AB_NAME)
 
     for obj in asset_env.objects:
         if obj.type.name != "TextAsset":
