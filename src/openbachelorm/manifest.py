@@ -310,6 +310,13 @@ def merge_act_asset_map(target_act_asset_map, src_act_asset_map_lst):
     for src_act_asset_map in src_act_asset_map_lst:
         src_act_asset_map_obj = json.loads(src_act_asset_map.m_Script)
 
+        for aspect_name, target_aspect_obj in target_act_asset_map_obj[
+            "aspects"
+        ].items():
+            src_aspect_obj = src_act_asset_map_obj["aspects"].get(aspect_name, {})
+            for k, v in src_aspect_obj.items():
+                target_aspect_obj.setdefault(k, v)
+
     target_act_asset_map.m_Script = json.dumps(target_act_asset_map_obj)
 
     target_act_asset_map.save()
