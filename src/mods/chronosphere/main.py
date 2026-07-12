@@ -29,6 +29,8 @@ def main():
 
     mgr.merge_special_anon_bundle()
 
+    mgr.merge_act_asset_map()
+
     mgr.prep_merger_bundle()
 
     mgr.migrate_level()

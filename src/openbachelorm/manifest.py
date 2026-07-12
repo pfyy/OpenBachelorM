@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import random
 from packaging.version import Version
+import json
 
 
 from anytree import Node, PreOrderIter
@@ -280,6 +281,34 @@ def merge_special_anon_bundle(
     dst_serialized_file.objects = dict(sorted(dst_serialized_file.objects.items()))
 
 
+ACT_ASSET_MAP_AB_NAME = "config/common.ab"
+
+
+def get_act_asset_map(res: Resource):
+    asset_env = res.load_asset(ACT_ASSET_MAP_AB_NAME)
+
+    for obj in asset_env.objects:
+        if obj.type.name != "TextAsset":
+            continue
+
+        data = obj.read()
+
+        if data.m_Name != "act_asset_map":
+            continue
+
+        return data
+
+    return None
+
+
+def merge_act_asset_map(target_act_asset_map, src_act_asset_map_lst):
+    target_act_asset_map_obj = json.loads(target_act_asset_map.m_Script)
+
+    target_act_asset_map.m_Script = json.dumps(target_act_asset_map_obj)
+
+    target_act_asset_map.save()
+
+
 def is_merger_tree_path_allowed(path: str) -> bool:
     if path.startswith("gamedata/"):
         if path.startswith("gamedata/levels/activities/"):
@@ -478,6 +507,19 @@ class ManifestMerger:
             src_env_lst.append(src_env)
 
         merge_special_anon_bundle(target_env, src_env_lst)
+
+    def merge_act_asset_map(self):
+        target_act_asset_map = get_act_asset_map(self.target_res)
+
+        self.target_res.mark_modified_asset(ACT_ASSET_MAP_AB_NAME)
+
+        src_act_asset_map_lst = []
+
+        for src_res_manager in self.src_res_lst:
+            src_act_asset_map = get_act_asset_map(src_res_manager)
+            src_act_asset_map_lst.append(src_act_asset_map)
+
+        merge_act_asset_map(target_act_asset_map, src_act_asset_map_lst)
 
     def get_merger_bundle_filepath(self, bundle_name: str):
         return Path(TMP_DIRPATH, self.mod_name, bundle_name)

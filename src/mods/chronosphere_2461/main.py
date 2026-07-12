@@ -42,6 +42,8 @@ def main():
 
     mgr.merge_src_res()
 
+    mgr.merge_act_asset_map()
+
     mgr.prep_merger_bundle()
 
     mgr.migrate_level()
