@@ -64,6 +64,7 @@ class KnownTable(StrEnum):
     TOKEN_TABLE = "token_table"
     UNIEQUIP_TABLE = "uniequip_table"
     ZONE_TABLE = "zone_table"
+    ARKVENT_TABLE = "arkvent_table"
 
     HANDBOOK_TABLE = "handbook_table"
     PLAYER_AVATAR_TABLE = "player_avatar_table"

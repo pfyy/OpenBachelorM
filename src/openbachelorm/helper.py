@@ -465,6 +465,7 @@ def get_known_table_decorator_lst(
             | KnownTable.TOKEN_TABLE
             | KnownTable.UNIEQUIP_TABLE
             | KnownTable.ZONE_TABLE
+            | KnownTable.ARKVENT_TABLE
         ):
             return [
                 script_decorator,
@@ -547,6 +548,10 @@ def is_known_table_available(table_name: KnownTable, client_version: str):
 
         case KnownTable.LEVEL_SCRIPT_TABLE:
             if Version(client_version) < Version("2.6.21"):
+                return False
+
+        case KnownTable.ARKVENT_TABLE:
+            if Version(client_version) < Version("2.7.61"):
                 return False
 
     return True
