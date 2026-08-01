@@ -44,7 +44,7 @@ def test_known_table():
     load_known_table("2.7.21", "26-04-22-10-22-20_1d417a")
     load_known_table("2.7.31", "26-05-20-12-59-09_e8f456")
     load_known_table("2.7.41", "26-07-01-15-26-52_d3376d")
-    load_known_table("2.7.51", "26-07-10-13-49-06_a14b4a")
+    load_known_table("2.7.51", "26-07-20-09-52-12_5d4a43")
 
 
 def test_known_table_windows():
@@ -54,4 +54,4 @@ def test_known_table_windows():
     load_known_table("2.7.21", "26-04-22-09-33-12_01a3a2", "Windows")
     load_known_table("2.7.31", "26-05-20-14-05-50_24a03e", "Windows")
     load_known_table("2.7.41", "26-07-01-15-25-07_7886d5", "Windows")
-    load_known_table("2.7.51", "26-07-10-13-52-38_fcd8ed", "Windows")
+    load_known_table("2.7.51", "26-07-20-09-52-01_970b78", "Windows")

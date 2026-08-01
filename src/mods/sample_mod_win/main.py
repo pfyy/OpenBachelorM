@@ -128,7 +128,7 @@ def build_sample_mod_win(client_version: str, res_version: str):
 
 
 def main():
-    build_sample_mod_win("2.7.51", "26-07-10-13-52-38_fcd8ed")
+    build_sample_mod_win("2.7.51", "26-07-20-09-52-01_970b78")
 
 
 if __name__ == "__main__":
