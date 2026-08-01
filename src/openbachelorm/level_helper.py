@@ -186,6 +186,11 @@ def get_codegen_migrate_level_decorator_lst():
 
 def handle_obj_in_level(obj, prts___levels):
     if isinstance(obj, prts___levels.clz_Torappu_EnemyDatabase_AttributesDataT):
+        if hasattr(obj, "groundBoundImmune") and obj.groundBoundImmune is None:
+            obj.groundBoundImmune = (
+                prts___levels.clz_Torappu_Undefinable_1_System_Boolean_T()
+            )
+
         if hasattr(obj, "teleportImmune") and obj.teleportImmune is None:
             obj.teleportImmune = (
                 prts___levels.clz_Torappu_Undefinable_1_System_Boolean_T()
