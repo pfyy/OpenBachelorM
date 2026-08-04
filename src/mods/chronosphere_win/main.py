@@ -5,7 +5,7 @@ from openbachelorm.manifest import ManifestMerger
 def main():
     mgr = ManifestMerger(
         "chronosphere_win",
-        Resource("2.7.61", "26-07-30-09-00-07_7e12e2", "Windows"),
+        Resource("2.7.61", "26-08-03-23-35-52_3445f2", "Windows"),
         [
             Resource("2.7.51", "26-07-20-09-52-01_970b78", "Windows"),
             Resource("2.7.41", "26-07-01-15-25-07_7886d5", "Windows"),
