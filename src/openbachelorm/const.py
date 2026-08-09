@@ -79,3 +79,23 @@ class KnownTable(StrEnum):
     BUFF_TEMPLATE_DATA = "buff_template_data"
 
     DATA_VERSION = "data_version"
+
+
+def get_last_res_version_android(client_version: str) -> str:
+    return ""
+
+
+def get_last_res_version_windows(client_version: str) -> str:
+    return ""
+
+
+def get_last_res_version(client_version: str, platform_name: str = "Android") -> str:
+    match platform_name:
+        case "Android":
+            return get_last_res_version_android(client_version)
+
+        case "Windows":
+            return get_last_res_version_windows(client_version)
+
+        case _:
+            raise ValueError(f"unknown platform_name {platform_name}")
