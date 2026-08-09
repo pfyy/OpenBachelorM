@@ -6,6 +6,10 @@ from openbachelorm.helper import (
     get_known_table_asset_name_prefix,
 )
 from openbachelorm.const import KnownTable
+from openbachelorm.const import (
+    get_last_res_version_android,
+    get_last_res_version_windows,
+)
 
 
 def load_known_table(
@@ -25,35 +29,35 @@ def load_known_table(
 
 
 def test_known_table():
-    load_known_table("2.4.01", "24-11-21-11-04-45-bae23b")
-    load_known_table("2.4.21", "25-01-08-07-44-44-3d8742")
-    load_known_table("2.4.41", "25-02-19-09-21-28-ba1f4e")
-    load_known_table("2.4.61", "25-03-27-16-19-10-4d4819")
-    load_known_table("2.5.04", "25-04-25-08-42-16_acb2f8")
-    load_known_table("2.5.60", "25-05-20-12-36-22_4803e1")
-    load_known_table("2.5.80", "25-06-26-04-47-55_47709b")
-    load_known_table("2.6.01", "25-07-19-05-16-54_1e71a6")
-    load_known_table("2.6.21", "25-08-25-23-45-59_81c7ff")
-    load_known_table("2.6.41", "25-09-28-12-13-16_6485b3")
-    load_known_table("2.6.61", "25-10-23-13-35-37_3d4b91")
-    load_known_table("2.6.71", "25-11-21-15-21-44_ee1197")
-    load_known_table("2.6.82", "25-12-30-07-42-27_86bc9a")
-    load_known_table("2.6.91", "26-02-02-04-52-41_58bd30")
-    load_known_table("2.7.01", "26-02-28-10-42-20_2bc282")
-    load_known_table("2.7.11", "26-03-31-05-42-28_7d7f67")
-    load_known_table("2.7.21", "26-04-22-10-22-20_1d417a")
-    load_known_table("2.7.31", "26-05-20-12-59-09_e8f456")
-    load_known_table("2.7.41", "26-07-01-15-26-52_d3376d")
-    load_known_table("2.7.51", "26-07-20-09-52-12_5d4a43")
-    load_known_table("2.7.61", "26-08-03-23-34-20_a745fc")
+    load_known_table("2.4.01", get_last_res_version_android("2.4.01"))
+    load_known_table("2.4.21", get_last_res_version_android("2.4.21"))
+    load_known_table("2.4.41", get_last_res_version_android("2.4.41"))
+    load_known_table("2.4.61", get_last_res_version_android("2.4.61"))
+    load_known_table("2.5.04", get_last_res_version_android("2.5.04"))
+    load_known_table("2.5.60", get_last_res_version_android("2.5.60"))
+    load_known_table("2.5.80", get_last_res_version_android("2.5.80"))
+    load_known_table("2.6.01", get_last_res_version_android("2.6.01"))
+    load_known_table("2.6.21", get_last_res_version_android("2.6.21"))
+    load_known_table("2.6.41", get_last_res_version_android("2.6.41"))
+    load_known_table("2.6.61", get_last_res_version_android("2.6.61"))
+    load_known_table("2.6.71", get_last_res_version_android("2.6.71"))
+    load_known_table("2.6.82", get_last_res_version_android("2.6.82"))
+    load_known_table("2.6.91", get_last_res_version_android("2.6.91"))
+    load_known_table("2.7.01", get_last_res_version_android("2.7.01"))
+    load_known_table("2.7.11", get_last_res_version_android("2.7.11"))
+    load_known_table("2.7.21", get_last_res_version_android("2.7.21"))
+    load_known_table("2.7.31", get_last_res_version_android("2.7.31"))
+    load_known_table("2.7.41", get_last_res_version_android("2.7.41"))
+    load_known_table("2.7.51", get_last_res_version_android("2.7.51"))
+    load_known_table("2.7.61", get_last_res_version_android("2.7.61"))
 
 
 def test_known_table_windows():
-    load_known_table("2.6.91", "26-02-02-05-12-37_d6d557", "Windows")
-    load_known_table("2.7.01", "26-02-28-11-16-12_689e5e", "Windows")
-    load_known_table("2.7.11", "26-03-31-05-51-38_1cc8a5", "Windows")
-    load_known_table("2.7.21", "26-04-22-09-33-12_01a3a2", "Windows")
-    load_known_table("2.7.31", "26-05-20-14-05-50_24a03e", "Windows")
-    load_known_table("2.7.41", "26-07-01-15-25-07_7886d5", "Windows")
-    load_known_table("2.7.51", "26-07-20-09-52-01_970b78", "Windows")
-    load_known_table("2.7.61", "26-08-03-23-35-52_3445f2", "Windows")
+    load_known_table("2.6.91", get_last_res_version_windows("2.6.91"), "Windows")
+    load_known_table("2.7.01", get_last_res_version_windows("2.7.01"), "Windows")
+    load_known_table("2.7.11", get_last_res_version_windows("2.7.11"), "Windows")
+    load_known_table("2.7.21", get_last_res_version_windows("2.7.21"), "Windows")
+    load_known_table("2.7.31", get_last_res_version_windows("2.7.31"), "Windows")
+    load_known_table("2.7.41", get_last_res_version_windows("2.7.41"), "Windows")
+    load_known_table("2.7.51", get_last_res_version_windows("2.7.51"), "Windows")
+    load_known_table("2.7.61", get_last_res_version_windows("2.7.61"), "Windows")
