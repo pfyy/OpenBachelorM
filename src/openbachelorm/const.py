@@ -155,12 +155,22 @@ def get_last_res_version_android(client_version: str) -> str:
             return "23-08-25-11-36-41-12f55f"
         case "2.0.40":
             return "23-07-24-13-21-30-90fb63"
+        case "2.0.11":
+            return "23-06-25-13-09-13-327c56"
+        case "2.0.01":
+            return "23-05-25-08-29-42-5bba8f"
+        case "1.9.91":
+            return "23-04-23-15-07-53-24a81c"
         case "1.9.81":
             return "23-03-27-11-50-38-b42880"
         case "1.9.62":
             return "23-02-22-22-37-04-ef2150"
         case "1.9.42":
             return "23-01-11-12-54-27-873b47"
+        case "1.9.21":
+            return "22-11-29-10-38-08-99d7db"
+        case "1.9.01":
+            return "22-10-21-22-14-51-ba22f3"
         case "1.8.81":
             return "22-09-19-15-00-59-ae77d7"
         case "1.8.61":
