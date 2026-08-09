@@ -5,6 +5,7 @@ from openbachelorm.helper import (
     get_known_table_asset_name_prefix,
 )
 from openbachelorm.const import KnownTable
+from openbachelorm.const import get_last_res_version_android
 
 
 def do_mod_character_table(character_table):
@@ -128,7 +129,8 @@ def build_sample_mod(client_version: str, res_version: str):
 
 
 def main():
-    build_sample_mod("2.7.61", "26-08-03-23-34-20_a745fc")
+    client_version = "2.7.61"
+    build_sample_mod(client_version, get_last_res_version_android(client_version))
 
 
 if __name__ == "__main__":

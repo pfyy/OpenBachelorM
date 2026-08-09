@@ -1,28 +1,29 @@
 from openbachelorm.resource import Resource
 from openbachelorm.manifest import ManifestMerger
+from openbachelorm.const import get_last_res_version_android
 
 
 def main():
     mgr = ManifestMerger(
         "chronosphere",
-        Resource("2.7.61", "26-08-03-23-34-20_a745fc"),
+        Resource("2.7.61", get_last_res_version_android("2.7.61")),
         [
-            Resource("2.7.51", "26-07-20-09-52-12_5d4a43"),
-            Resource("2.7.41", "26-07-01-15-26-52_d3376d"),
-            Resource("2.7.31", "26-05-20-12-59-09_e8f456"),
-            Resource("2.7.21", "26-04-22-10-22-20_1d417a"),
-            Resource("2.7.11", "26-03-31-05-42-28_7d7f67"),
-            Resource("2.7.01", "26-02-28-10-42-20_2bc282"),
-            Resource("2.6.91", "26-02-02-04-52-41_58bd30"),
-            Resource("2.6.82", "25-12-30-07-42-27_86bc9a"),
-            Resource("2.6.71", "25-11-21-15-21-44_ee1197"),
-            Resource("2.6.61", "25-10-23-13-35-37_3d4b91"),
-            Resource("2.6.41", "25-09-28-12-13-16_6485b3"),
-            Resource("2.6.21", "25-08-25-23-45-59_81c7ff"),
-            Resource("2.6.01", "25-07-19-05-16-54_1e71a6"),
-            Resource("2.5.80", "25-06-26-04-47-55_47709b"),
-            Resource("2.5.60", "25-05-20-12-36-22_4803e1"),
-            Resource("2.5.04", "25-04-25-08-42-16_acb2f8"),
+            Resource("2.7.51", get_last_res_version_android("2.7.51")),
+            Resource("2.7.41", get_last_res_version_android("2.7.41")),
+            Resource("2.7.31", get_last_res_version_android("2.7.31")),
+            Resource("2.7.21", get_last_res_version_android("2.7.21")),
+            Resource("2.7.11", get_last_res_version_android("2.7.11")),
+            Resource("2.7.01", get_last_res_version_android("2.7.01")),
+            Resource("2.6.91", get_last_res_version_android("2.6.91")),
+            Resource("2.6.82", get_last_res_version_android("2.6.82")),
+            Resource("2.6.71", get_last_res_version_android("2.6.71")),
+            Resource("2.6.61", get_last_res_version_android("2.6.61")),
+            Resource("2.6.41", get_last_res_version_android("2.6.41")),
+            Resource("2.6.21", get_last_res_version_android("2.6.21")),
+            Resource("2.6.01", get_last_res_version_android("2.6.01")),
+            Resource("2.5.80", get_last_res_version_android("2.5.80")),
+            Resource("2.5.60", get_last_res_version_android("2.5.60")),
+            Resource("2.5.04", get_last_res_version_android("2.5.04")),
         ],
     )
 
