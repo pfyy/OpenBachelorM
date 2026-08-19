@@ -34,6 +34,34 @@ def do_mod_level(level):
         }
     )
 
+    found = False
+    for card in level["predefines"]["tokenCards"]:
+        if card["inst"]["characterKey"] == "trap_296_iznsbr":
+            found = True
+            card["initialCnt"] = 99
+            break
+
+    if not found:
+        level["predefines"]["tokenCards"].append(
+            {
+                "initialCnt": 99,
+                "inst": {"characterKey": "trap_296_iznsbr", "level": 1},
+                "skillIndex": -1,
+                "mainSkillLvl": 1,
+                "skinId": "",
+            },
+        )
+
+    level["predefines"]["tokenCards"].append(
+        {
+            "initialCnt": 0,
+            "inst": {"characterKey": "trap_790_dytswd", "level": 1},
+            "skillIndex": -1,
+            "mainSkillLvl": 1,
+            "skinId": "",
+        }
+    )
+
     level["bgmEvent"] = "rl5boss5"
 
     return level
