@@ -393,6 +393,15 @@ class Resource:
 
         self.mark_modified_asset(level_ab_name)
 
+        self.mod_level_ab(asset_env, level_id, mod_level_func, decorator_lst)
+
+    def mod_level_ab(
+        self,
+        asset_env: UnityPy.Environment,
+        level_id: str,
+        mod_level_func,
+        decorator_lst,
+    ):
         level_data = get_level_data_by_level_id(asset_env, level_id)
 
         mod_level_func = apply_decorator_lst(mod_level_func, decorator_lst)
