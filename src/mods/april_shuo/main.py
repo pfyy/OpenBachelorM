@@ -9,6 +9,7 @@ from openbachelorm.helper import (
     get_known_table_asset_name_prefix,
 )
 from openbachelorm.const import KnownTable
+from openbachelorm.manifest import get_node_by_path
 
 
 def do_mod_character_table(character_table):
@@ -102,9 +103,11 @@ def main():
         ),
     )
 
-    ab_filename = mgr.get_merger_bundle_filepath(
-        "anon/3848542ff281bdbee51286c81ce549d2.bin"
+    node = get_node_by_path(
+        mgr.merger_tree_root,
+        "gamedata/levels/activities/act7fun/level_act7fun_01.openbachelorm",
     )
+    ab_filename = mgr.get_merger_bundle_filepath(node.bundle_name)
     asset_env = UnityPy.load(ab_filename.as_posix())
     for i in range(1, 7):
         level_id = f"level_act7fun_0{i}"
