@@ -5,6 +5,9 @@ import json
 import flatbuffers
 import bson
 
+from .fbs_codegen.v2_7_71 import (
+    prts___levels_generated as prts___levels_v2_7_71,
+)
 from .fbs_codegen.v2_7_61 import (
     prts___levels_generated as prts___levels_v2_7_61,
 )
@@ -82,6 +85,9 @@ from .helper import (
 
 def get_prts___levels(client_version: str):
     match client_version:
+        case "2.7.71":
+            return prts___levels_v2_7_71
+
         case "2.7.61":
             return prts___levels_v2_7_61
 
