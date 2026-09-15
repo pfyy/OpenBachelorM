@@ -50,6 +50,7 @@ def test_known_table():
     load_known_table("2.7.41", get_last_res_version_android("2.7.41"))
     load_known_table("2.7.51", get_last_res_version_android("2.7.51"))
     load_known_table("2.7.61", get_last_res_version_android("2.7.61"))
+    load_known_table("2.7.71", get_last_res_version_android("2.7.71"))
 
 
 def test_known_table_windows():
@@ -61,3 +62,4 @@ def test_known_table_windows():
     load_known_table("2.7.41", get_last_res_version_windows("2.7.41"), "Windows")
     load_known_table("2.7.51", get_last_res_version_windows("2.7.51"), "Windows")
     load_known_table("2.7.61", get_last_res_version_windows("2.7.61"), "Windows")
+    load_known_table("2.7.71", get_last_res_version_windows("2.7.71"), "Windows")

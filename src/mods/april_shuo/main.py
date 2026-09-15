@@ -69,7 +69,10 @@ def do_mod_level(level):
 
 
 def main():
-    res = Resource("2.7.61", get_last_res_version_windows("2.7.61"), "Windows")
+    client_version = "2.7.71"
+    res = Resource(
+        client_version, get_last_res_version_windows(client_version), "Windows"
+    )
 
     mgr = ManifestMerger(
         "april_shuo",

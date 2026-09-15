@@ -129,7 +129,7 @@ def build_sample_mod_win(client_version: str, res_version: str):
 
 
 def main():
-    client_version = "2.7.61"
+    client_version = "2.7.71"
     build_sample_mod_win(client_version, get_last_res_version_windows(client_version))
 
 

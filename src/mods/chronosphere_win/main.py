@@ -6,8 +6,9 @@ from openbachelorm.const import get_last_res_version_windows
 def main():
     mgr = ManifestMerger(
         "chronosphere_win",
-        Resource("2.7.61", get_last_res_version_windows("2.7.61"), "Windows"),
+        Resource("2.7.71", get_last_res_version_windows("2.7.71"), "Windows"),
         [
+            Resource("2.7.61", get_last_res_version_windows("2.7.61"), "Windows"),
             Resource("2.7.51", get_last_res_version_windows("2.7.51"), "Windows"),
             Resource("2.7.41", get_last_res_version_windows("2.7.41"), "Windows"),
             Resource("2.7.31", get_last_res_version_windows("2.7.31"), "Windows"),
