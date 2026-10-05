@@ -84,7 +84,7 @@ class KnownTable(StrEnum):
 def get_last_res_version_android(client_version: str) -> str:
     match client_version:
         case "2.7.71":
-            return "26-09-09-07-16-57_d4e461"
+            return "26-09-22-07-47-20_6c71fa"
         case "2.7.61":
             return "26-08-17-11-25-42_dbc172"
         case "2.7.51":
@@ -184,7 +184,7 @@ def get_last_res_version_android(client_version: str) -> str:
 def get_last_res_version_windows(client_version: str) -> str:
     match client_version:
         case "2.7.71":
-            return "26-09-09-08-18-15_d25676"
+            return "26-09-22-07-42-22_40345d"
         case "2.7.61":
             return "26-08-17-11-22-14_59d37d"
         case "2.7.51":
