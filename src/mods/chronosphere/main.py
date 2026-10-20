@@ -6,8 +6,9 @@ from openbachelorm.const import get_last_res_version_android
 def main():
     mgr = ManifestMerger(
         "chronosphere",
-        Resource("2.7.71", get_last_res_version_android("2.7.71")),
+        Resource("2.7.81", get_last_res_version_android("2.7.81")),
         [
+            Resource("2.7.71", get_last_res_version_android("2.7.71")),
             Resource("2.7.61", get_last_res_version_android("2.7.61")),
             Resource("2.7.51", get_last_res_version_android("2.7.51")),
             Resource("2.7.41", get_last_res_version_android("2.7.41")),

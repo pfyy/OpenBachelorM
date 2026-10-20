@@ -69,7 +69,7 @@ def do_mod_level(level):
 
 
 def main():
-    client_version = "2.7.71"
+    client_version = "2.7.81"
     res = Resource(
         client_version, get_last_res_version_windows(client_version), "Windows"
     )

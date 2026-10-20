@@ -129,7 +129,7 @@ def build_sample_mod(client_version: str, res_version: str):
 
 
 def main():
-    client_version = "2.7.71"
+    client_version = "2.7.81"
     build_sample_mod(client_version, get_last_res_version_android(client_version))
 
 
